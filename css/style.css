@@ -167,6 +167,7 @@ body {
   transition: transform 0.5s ease, filter 0.5s ease;
 }
 .logo svg { width: 100%; height: 100%; }
+.logo-inner img { width: 100%; height: 100%; object-fit: contain; }
 
 /* --- אתגר: זום-אין --- */
 .logo.mode-zoom .logo-inner { transform: scale(3.4) translate(6%, 4%); }
