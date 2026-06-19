@@ -1,5 +1,5 @@
 /* ============================================================
-   🧠  מנוע החידון
+   🧠  מנוע החידון  (כולל טיימר לכל שאלה + אתגרי לוגו)
    ============================================================ */
 
 (function () {
@@ -14,10 +14,19 @@
   const trackFill = document.getElementById("trackFill");
   const carIcon = document.getElementById("carIcon");
   const scoreEl = document.getElementById("score");
+  const timerBar = document.getElementById("timerBar");
+  const timerNum = document.getElementById("timerNum");
 
   let current = 0;
   let correctCount = 0;
   const total = QUESTIONS.length;
+
+  const SECONDS = (CONFIG.secondsPerQuestion && CONFIG.secondsPerQuestion > 0)
+    ? CONFIG.secondsPerQuestion : 20;
+
+  let timeLeft = SECONDS;
+  let timerId = null;
+  let answered = false; // האם השאלה כבר נסגרה (נכון / נגמר הזמן)
 
   function updateTrack() {
     const pct = (current / total) * 100;
@@ -26,8 +35,60 @@
     scoreEl.textContent = `תחנה ${Math.min(current + 1, total)} מתוך ${total} · ✅ ${correctCount}`;
   }
 
+  // ===== טיימר =====
+  function startTimer() {
+    clearInterval(timerId);
+    timeLeft = SECONDS;
+    renderTimer();
+    timerId = setInterval(() => {
+      timeLeft--;
+      renderTimer();
+      if (timeLeft <= 0) {
+        clearInterval(timerId);
+        timeUp();
+      }
+    }, 1000);
+  }
+
+  function stopTimer() { clearInterval(timerId); }
+
+  function renderTimer() {
+    const pct = Math.max(0, (timeLeft / SECONDS) * 100);
+    timerBar.style.width = pct + "%";
+    timerNum.textContent = "⏱️ " + Math.max(0, timeLeft);
+    timerBar.classList.toggle("danger", timeLeft <= 5);
+    timerNum.classList.toggle("danger", timeLeft <= 5);
+  }
+
+  function timeUp() {
+    if (answered) return;
+    answered = true;
+    const q = QUESTIONS[current];
+    const buttons = [...optionsEl.querySelectorAll(".option")];
+    buttons.forEach((b, i) => {
+      b.disabled = true;
+      if (i === q.answer) b.classList.add("correct");
+    });
+    feedbackEl.textContent = "⏰ נגמר הזמן! התשובה מסומנת. ממשיכים...";
+    feedbackEl.className = "feedback bad";
+    setTimeout(next, 1500);
+  }
+
+  // ===== אתגרי לוגו =====
+  function applyMode(mode) {
+    logoEl.className = "logo"; // איפוס
+    logoEl.style.removeProperty("--reveal");
+    if (!mode || mode === "full") return;
+    logoEl.classList.add("mode-" + mode);
+    if (mode === "blur") {
+      // משך ההתחדדות = משך הטיימר
+      logoEl.style.setProperty("--reveal", SECONDS + "s");
+    }
+  }
+
   function renderQuestion() {
     const q = QUESTIONS[current];
+    answered = false;
     feedbackEl.textContent = "";
     feedbackEl.className = "feedback";
     hintText.textContent = "";
@@ -39,11 +100,13 @@
 
     promptEl.textContent = q.prompt;
 
-    // לוגו
+    // לוגו + אתגר ויזואלי
     if (q.type === "logo" && LOGOS[q.logo]) {
-      logoEl.innerHTML = LOGOS[q.logo];
       logoEl.style.display = "flex";
+      applyMode(q.mode);
+      logoEl.innerHTML = '<div class="logo-inner">' + LOGOS[q.logo] + "</div>";
     } else {
+      logoEl.className = "logo";
       logoEl.innerHTML = "";
       logoEl.style.display = "none";
     }
@@ -59,25 +122,31 @@
     });
 
     updateTrack();
+    startTimer();
   }
 
   function handleAnswer(index, btn) {
+    if (answered) return;
     const q = QUESTIONS[current];
     const buttons = [...optionsEl.querySelectorAll(".option")];
 
     if (index === q.answer) {
+      answered = true;
+      stopTimer();
       btn.classList.add("correct");
       buttons.forEach((b) => (b.disabled = true));
+      // חושפים את הלוגו המלא כפרס קטן
+      logoEl.classList.add("revealed");
       correctCount++;
       feedbackEl.textContent = randomCheer();
-      feedbackEl.classList.add("good");
+      feedbackEl.className = "feedback good";
       burst();
       setTimeout(next, 1100);
     } else {
       btn.classList.add("wrong");
       btn.disabled = true;
-      feedbackEl.textContent = "אופס! נסה שוב — אתה לא נפסל 💪";
-      feedbackEl.classList.add("bad");
+      feedbackEl.textContent = "אופס! נסה שוב — מהר, הזמן רץ ⏱️";
+      feedbackEl.className = "feedback bad";
     }
   }
 
@@ -91,7 +160,7 @@
   }
 
   function finish() {
-    // שומרים תוצאה כדי שדף הכרטיס ידע אם עברת
+    stopTimer();
     const passed = correctCount >= CONFIG.questionsToWin;
     try {
       localStorage.setItem("quizPassed", passed ? "1" : "0");
@@ -101,17 +170,18 @@
     if (passed) {
       window.location.href = "ticket.html";
     } else {
-      // לא הגיע לרף — מציעים לנסות שוב
       stageEl.innerHTML = `
         <h2 class="near">כמעט! 🏎️</h2>
         <p>צברת ${correctCount} תשובות נכונות מתוך ${total}.</p>
         <p>צריך לפחות ${CONFIG.questionsToWin} כדי לקבל את הכרטיס.</p>
         <button class="btn big" onclick="location.reload()">🔁 לרוץ שוב מההתחלה</button>
       `;
+      timerNum.textContent = "";
+      timerBar.style.width = "0%";
     }
   }
 
-  // אפקטים קטנים
+  // ===== אפקטים =====
   function randomCheer() {
     const cheers = ["מצוין! 🔥", "נכון מאוד! 🏁", "אלוף! 💨", "מדויק! 🏆", "ממשיכים! 🚀"];
     return cheers[Math.floor(Math.random() * cheers.length)];
