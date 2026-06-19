@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>החידון — המירוץ למיליון</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div class="checker"></div>
+
+  <div class="wrap">
+    <div class="card">
+      <div class="track-wrap">
+        <div class="score" id="score">תחנה 1 מתוך 10</div>
+        <div class="track">
+          <div class="track-fill" id="trackFill"></div>
+          <div class="car-icon" id="carIcon">🏎️</div>
+        </div>
+      </div>
+
+      <div id="stage">
+        <p class="prompt" id="prompt"></p>
+        <div class="logo" id="logo"></div>
+        <div class="options" id="options"></div>
+
+        <div class="tools">
+          <button class="hint-btn" id="hintBtn">💡 רמז</button>
+        </div>
+        <p class="hint-text" id="hintText"></p>
+        <p class="feedback" id="feedback"></p>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script src="js/logos.js"></script>
+  <script src="js/questions.js"></script>
+  <script src="js/quiz.js"></script>
+</body>
+</html>

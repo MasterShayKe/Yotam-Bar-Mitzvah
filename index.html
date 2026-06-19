@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>המירוץ למיליון — בר מצווה</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div class="checker"></div>
+
+  <div class="wrap">
+    <div class="hero">
+      <div class="hero-emoji">🏎️</div>
+      <h1 class="title" id="title">המירוץ למיליון</h1>
+      <p class="subtitle" id="subtitle">מהדורת בר המצווה 🏁</p>
+
+      <p class="tagline" id="tagline">
+        <strong id="childName">החוגג</strong>, ברוך הבא למירוץ!<br />
+        לפניך 10 תחנות. עבור אותן בהצלחה כדי לזכות
+        ב<strong>כרטיס סודי</strong> שייקח אותך אל ההפתעה הגדולה... 🤫💨
+      </p>
+
+      <a href="quiz.html" class="btn big">🚦 צא לדרך!</a>
+
+      <p class="footer-note">
+        טיפ: יש כפתור "רמז" בכל שאלה. טעות לא פוסלת — אפשר לנסות שוב 😉
+      </p>
+    </div>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script>
+    document.getElementById("title").textContent = CONFIG.gameTitle;
+    document.getElementById("subtitle").textContent = CONFIG.gameSubtitle;
+    document.getElementById("childName").textContent = CONFIG.childName;
+    document.title = CONFIG.gameTitle + " — בר מצווה";
+  </script>
+</body>
+</html>

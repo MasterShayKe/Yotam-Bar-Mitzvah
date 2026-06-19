@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>זכית בכרטיס! 🎟️</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div class="checker"></div>
+
+  <div class="wrap">
+    <h1 class="win-title">🏆 עברת את המירוץ! 🏆</h1>
+    <p class="win-sub" id="winSub">זכית בכרטיס הסודי...</p>
+
+    <div class="ticket">
+      <div class="notch left"></div>
+      <div class="notch right"></div>
+
+      <div class="ticket-head">
+        <div class="train">🚄</div>
+        <h1>כרטיס נסיעה</h1>
+        <div>VIP · המירוץ למיליון</div>
+      </div>
+
+      <div class="ticket-body">
+        <div class="ticket-route">
+          <span id="from">תחנת הבית</span>
+          <span class="arrow">⟸</span>
+          <span id="to">אירוע הדריפטים</span>
+        </div>
+
+        <div class="ticket-row"><span>נוסע/ת</span><span id="passenger">—</span></div>
+        <div class="ticket-row"><span>תחנת מפגש</span><span id="station">—</span></div>
+        <div class="ticket-row"><span>תאריך</span><span id="date">—</span></div>
+        <div class="ticket-row"><span>שעה</span><span id="time">—</span></div>
+
+        <div class="ticket-msg" id="msg">—</div>
+
+        <p class="center mt" style="color:#777;font-weight:700;">הצג את הקוד הסודי לדוד בתחנה:</p>
+        <div class="ticket-code" id="code">—</div>
+
+        <div class="barcode" id="barcode"></div>
+      </div>
+    </div>
+
+    <div class="center mt">
+      <a href="index.html" class="btn gold">🔁 חזרה למסך הפתיחה</a>
+    </div>
+
+    <p class="footer-note">תתכונן... הצמיגים כבר מחכים 🛞💨</p>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script>
+    // הגנה קטנה: אם מישהו נכנס ישר בלי לעבור את החידון
+    var passed = false;
+    try { passed = localStorage.getItem("quizPassed") === "1"; } catch (e) {}
+    if (!passed) {
+      document.getElementById("winSub").textContent =
+        "כדי לקבל את הכרטיס צריך קודם לעבור את החידון 😏";
+    }
+
+    var t = CONFIG.ticket;
+    document.getElementById("passenger").textContent = CONFIG.childName;
+    document.getElementById("from").textContent = t.from;
+    document.getElementById("to").textContent = t.to;
+    document.getElementById("station").textContent = t.station;
+    document.getElementById("date").textContent = t.date;
+    document.getElementById("time").textContent = t.time;
+    document.getElementById("msg").textContent = t.secretMessage;
+    document.getElementById("code").textContent = t.secretCode;
+
+    // ברקוד דקורטיבי
+    var bc = document.getElementById("barcode");
+    for (var i = 0; i < 40; i++) {
+      var s = document.createElement("span");
+      s.style.width = (Math.random() * 4 + 1) + "px";
+      s.style.height = "100%";
+      bc.appendChild(s);
+    }
+
+    // קונפטי חגיגי
+    var colors = ["#ffd700", "#ff4d4d", "#4dd2ff", "#6bff8f", "#fff"];
+    for (var j = 0; j < 40; j++) {
+      (function (k) {
+        setTimeout(function () {
+          var p = document.createElement("span");
+          p.className = "confetti";
+          p.style.left = Math.random() * 100 + "%";
+          p.style.top = "-20px";
+          p.style.background = colors[Math.floor(Math.random() * colors.length)];
+          document.body.appendChild(p);
+          setTimeout(function () { p.remove(); }, 1500);
+        }, k * 40);
+      })(j);
+    }
+  </script>
+</body>
+</html>
