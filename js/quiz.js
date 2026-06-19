@@ -79,9 +79,11 @@
     logoEl.className = "logo"; // איפוס
     logoEl.style.removeProperty("--reveal");
     if (!mode || mode === "full") return;
-    logoEl.classList.add("mode-" + mode);
-    if (mode === "blur") {
-      // משך ההתחדדות = משך הטיימר
+    // תמיכה בשילוב מצבים, למשל "zoom silhouette"
+    mode.split(/\s+/).forEach((m) => {
+      if (m) logoEl.classList.add("mode-" + m);
+    });
+    if (mode.indexOf("blur") > -1) {
       logoEl.style.setProperty("--reveal", SECONDS + "s");
     }
   }

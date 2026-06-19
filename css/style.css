@@ -169,33 +169,47 @@ body {
 .logo svg { width: 100%; height: 100%; }
 .logo-inner img { width: 100%; height: 100%; object-fit: contain; }
 
-/* --- אתגר: זום-אין --- */
-.logo.mode-zoom .logo-inner { transform: scale(3.4) translate(6%, 4%); }
-.logo.mode-zoom.revealed .logo-inner { transform: none; }
+/* כשנחשף (תשובה נכונה) — תמיד מציגים את הלוגו המלא והישר */
+.logo.revealed .logo-inner {
+  transform: none !important;
+  filter: none !important;
+  clip-path: none !important;
+  animation: none !important;
+}
 
-/* --- אתגר: צללית --- */
+/* --- אתגר: זום-אין קיצוני (רואים רק שבריר) --- */
+.logo.mode-zoom .logo-inner { transform: scale(5.2); }
+
+/* --- אתגר: צללית (רק הצורה השחורה, בלי צבע) --- */
 .logo.mode-silhouette .logo-inner { filter: brightness(0); }
-.logo.mode-silhouette.revealed .logo-inner { filter: none; }
 
-/* --- אתגר: מטושטש שמתחדד עם הזמן --- */
+/* --- אתגר: סיבוב (הלוגו הפוך) --- */
+.logo.mode-rotate .logo-inner { transform: rotate(180deg); }
+
+/* --- אתגר: רסיס (פס דק בלבד, מוגדל) --- */
+.logo.mode-fragment .logo-inner {
+  transform: scale(2.6);
+  clip-path: inset(40% 0 40% 0);
+}
+
+/* --- אתגר: מטושטש שנשאר מטושטש (לא מתחדד עד תשובה) --- */
 .logo.mode-blur .logo-inner {
-  filter: blur(14px);
+  filter: blur(16px);
   animation: unblur var(--reveal, 20s) ease-out forwards;
 }
-.logo.mode-blur.revealed .logo-inner { filter: none; animation: none; }
 @keyframes unblur {
-  0% { filter: blur(14px); }
-  70% { filter: blur(4px); }
-  100% { filter: blur(1.5px); }
+  0%   { filter: blur(16px); }
+  60%  { filter: blur(9px); }
+  100% { filter: blur(6px); }
 }
 
-/* --- אתגר: חלק חסר --- */
+/* --- אתגר: חלק גדול חסר --- */
 .logo.mode-missing::after {
   content: "❓";
   position: absolute;
   top: 0;
   left: 0;
-  width: 46%;
+  width: 62%;
   height: 100%;
   background: #1d2233;
   display: flex;
@@ -205,6 +219,11 @@ body {
   border-left: 3px dashed var(--gold);
 }
 .logo.mode-missing.revealed::after { display: none; }
+
+/* שילוב צללית+זום: גם וגם (תכונות שונות, לא מתנגשות) */
+.logo.mode-zoom.mode-silhouette .logo-inner,
+.logo.mode-fragment.mode-silhouette .logo-inner,
+.logo.mode-rotate.mode-silhouette .logo-inner { filter: brightness(0); }
 
 .options { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 @media (max-width: 460px) { .options { grid-template-columns: 1fr; } }
