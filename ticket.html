@@ -42,9 +42,6 @@
 
         <div class="ticket-msg" id="msg">—</div>
 
-        <p class="code-label">הצג את הקוד הסודי לשי בתחנה:</p>
-        <div class="ticket-code" id="code">—</div>
-
         <div class="barcode" id="barcode"></div>
 
         <div class="ticket-stamp">✓<br>עבר את<br>המירוץ</div>
@@ -76,7 +73,6 @@
     document.getElementById("date").textContent = t.date;
     document.getElementById("time").textContent = t.time;
     document.getElementById("msg").textContent = t.secretMessage;
-    document.getElementById("code").textContent = t.secretCode;
 
     // ברקוד דקורטיבי
     var bc = document.getElementById("barcode");
